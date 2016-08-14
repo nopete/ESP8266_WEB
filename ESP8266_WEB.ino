@@ -47,7 +47,7 @@ void loop()
      cipSend +=webpage.length();
      cipSend +="\r\n";
      
-     sendData(cipsend,1000,DEBUG);
+     sendData(cipSend,1000,DEBUG);
      sendData(webpage,1000,DEBUG);
      
      webpage="<button>LED2</button>";
@@ -58,7 +58,7 @@ void loop()
      cipSend +=webpage.length();
      cipSend +="\r\n";
      
-     sendData(cipsend,1000,DEBUG);
+     sendData(cipSend,1000,DEBUG);
      sendData(webpage,1000,DEBUG);
  
      String closeCommand = "AT+CIPCLOSE="; 
