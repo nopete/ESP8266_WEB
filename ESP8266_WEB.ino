@@ -9,7 +9,7 @@ SoftwareSerial esp8266(2,3); // make RX Arduino line is pin 2, make TX Arduino l
 void setup()
 {
   Serial.begin(9600);
-  esp8266.begin(9600); // your esp's baud rate might be different
+  esp8266.begin(115200); // your esp's baud rate might be different
   
  
   
@@ -74,7 +74,11 @@ void loop()
 String sendData(String command, const int timeout, boolean debug)
 {
     String response = "";
-    
+    if (debug)
+    {
+      Serial.print(">>>>> SENDING ");
+      Serial.println(command);
+    }
     esp8266.print(command); // send the read character to the esp8266
     
     long int time = millis();
