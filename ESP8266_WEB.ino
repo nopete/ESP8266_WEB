@@ -3,18 +3,37 @@
  
 #define DEBUG true
  
-SoftwareSerial esp8266(2,3); // make RX Arduino line is pin 2, make TX Arduino line is pin 3.
-                             // This means that you need to connect the TX line from the esp to the Arduino's pin 2
-                             // and the RX line from the esp to the Arduino's pin 3
+SoftwareSerial esp8266(8,9); // make RX Arduino line is pin 8, make TX Arduino line is pin 9.
+                             // This means that you need to connect the TX line from the esp to the Arduino's pin 8
+                             // and the RX line from the esp to the Arduino's pin 9
+
+static const String AP_NAME=REPLACE!!! // "AP_NAME" ;
+static const String AP_PASSWD=SUBSTITUTE!!! // AP_PASSWD;
+
 void setup()
 {
+  uint32_t baud = 9600;
   Serial.begin(9600);
-  esp8266.begin(115200); // your esp's baud rate might be different
+  esp8266.begin(115200);
+  esp8266.print("AT+CIOBAUD=");
+  esp8266.println(baud);
+  esp8266.begin(baud);
+  Serial.print("SETUP!! @");
+  Serial.println(baud);
   
  
   
-  sendData("AT+RST\r\n",2000,DEBUG); // reset module
-  sendData("AT+CWMODE=2\r\n",1000,DEBUG); // configure as access point
+ // sendData("AT+RST\r\n",2000,DEBUG); // reset module
+  //sendData("AT+CWMODE=2\r\n",1000,DEBUG); // configure as access point
+  sendData("AT+CWMODE=1\r\n",1000,DEBUG); // configure as a client
+//  sendData("AT+CWLAP\r\n",1000,DEBUG); // configure as a client
+
+  sendData("AT+CWJAP=\"",100,DEBUG);
+  sendData(AP_NAME,100, DEBUG);
+  sendData("\",\"",100, DEBUG);
+  sendData(AP_PASSWD,100, DEBUG);
+  sendData("\"\r\n",10000,DEBUG); // configure as access point
+
   sendData("AT+CIFSR\r\n",1000,DEBUG); // get ip address
   sendData("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
   sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
@@ -96,6 +115,7 @@ String sendData(String command, const int timeout, boolean debug)
     
     if(debug)
     {
+      Serial.print(">>>>> RECEIVED ");
       Serial.print(response);
     }
     
